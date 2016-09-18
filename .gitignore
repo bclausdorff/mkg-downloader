@@ -83,3 +83,7 @@ ENV/
 
 # Spyder project settings
 .spyderproject
+/bin
+/include
+/pip-selfcheck.json
+/mkg_lido--mkgddb-sub-cd-profil_20160913.xml
