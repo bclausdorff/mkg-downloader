@@ -1,14 +1,16 @@
 baseurl = "https://sammlungonline.mkg-hamburg.de/resource-cache/mkg/1/"
 
+baseurl = "https://sammlungonline.mkg-hamburg.de/de/object/{}/image_download/0"
+
 class Item:
-    inventory_no = ""
+    record_id = ""
     title = ""
     display_date = ""
 
     @property
     def uri(self):
-        return baseurl + self.inventory_no + '.jpg'
+        return baseurl.format(self.record_id)
 
-    def __init__(self, inventory_no, title):
-        self.inventory_no = inventory_no
-        self.title        = title
+    def __init__(self, record_id, title):
+        self.record_id = record_id
+        self.title     = title

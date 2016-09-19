@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import xml.etree.ElementTree as ET
+import urllib.request
 import file_validator
 from item import Item
 
@@ -47,9 +48,9 @@ for event, elem in ET.iterparse(args.filepath):
         if has_term(elem, args.classification) == False:
             continue
 
-        inventory_no = elem.find('.//lido:workID', namespaces).text
+        record_id    = elem.find('.//lido:recordID', namespaces).text
         title        = elem.find('.//lido:titleSet/lido:appellationValue', namespaces).text
-        item         = Item(inventory_no, title)
+        item         = Item(record_id, title)
 
         if elem.find('.//lido:displayDate', namespaces) is not None:
             item.display_date = elem.find('.//lido:displayDate', namespaces).text
@@ -59,5 +60,8 @@ for event, elem in ET.iterparse(args.filepath):
 
 
 # for i in item_list:
+#     filename = i.inventory_no + '.jpg'
+#     urllib.request.urlretrieve(i.uri, filename)
 
-
+print(item_list[0].uri)
+urllib.request.urlretrieve(item_list[0].uri, "yolo.jpg")
