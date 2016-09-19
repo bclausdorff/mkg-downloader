@@ -1,14 +1,7 @@
 # Get started
-virtualenv recommended to isolate python bin and pip packages
 
-
-From within the project folder, call:
-
-```
-virtualenv . && source bin/activate && pip3 install -r requirements.txt
-```
-
-
+## Recommended setup
+- python3
 
 ## Usage
 
@@ -16,15 +9,15 @@ virtualenv . && source bin/activate && pip3 install -r requirements.txt
 python3 main.py --file ./mkg_lido--mkgddb-sub-cd-profil_20160913.xml -fc "Porträtfotografie" -v -o ./downloads
 ```
 
-
 ## TODO
 - [x] filter for classification terms
 - [ ] filter for several classification terms
 - [ ] fuzzy filtering
-- [ ] threaded downloads
-- [ ] progress bar
+- [x] download first image for every filtered item
 - [ ] option for getting all images for a record
+- [ ] threaded downloads
 - [ ] download via resourceWrap urls
+- [ ] progress bar
 - [ ] idle indicator
 - [ ] option: create output_directory if not existant
 - [ ] fix empty image bug
