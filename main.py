@@ -9,6 +9,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", dest="filepath", required=True,
                     help="path to xml file", metavar="FILE",
                     type=lambda x: file_validator.is_valid_file(parser, x))
+parser.add_argument("-o", "--output_dir", dest="outputdir", required=False,
+                    help="folder path for saving the images", default='.',
+                    type=lambda x: file_validator.is_valid_dir(parser, x))
 parser.add_argument("-fc", "--filter_classification_term", dest="classification", required=False,
                     help="pass a classification term to filter by (e.g. 'Fotografie')")
 parser.add_argument("-v", "--verbosity", dest="verbose",
@@ -22,10 +25,8 @@ namespaces       = {'lido': schema_uri}
 
 item_list = []
 
-# iterating elements and clearing them after usage
-# -> allows to start handling elements right away and have low memory impact
-
-print(args.classification)
+if args.verbose:
+    print("Downloading all items that have classification term {} to folder {}".format(args.classification, args.outputdir))
 
 def has_term(elem, term):
     term_elements = elem.findall('.//lido:classificationWrap//lido:term', namespaces)
@@ -39,12 +40,11 @@ def has_term(elem, term):
 
     return False
 
-
-# todo: fuzzy filter
-
 if args.verbose:
     print("Filtering items for term: {}".format(args.classification))
 
+# iterating elements and clearing them after usage
+# -> allows to start handling elements right away and have low memory impact
 for event, elem in ET.iterparse(args.filepath):
     if event == 'end' and elem.tag == '{}lido'.format(namespace_prefix):
 
@@ -64,8 +64,8 @@ for event, elem in ET.iterparse(args.filepath):
 
 
 for i in item_list:
-    filename = i.inventory_no + '.jpg'
-    urllib.request.urlretrieve(i.uri, filename)
+    filepath = args.outputdir + i.inventory_no + '.jpg'
+    urllib.request.urlretrieve(i.uri, filepath)
 
     if args.verbose:
-        print("Downloading: {}".format(filename))
+        print("Downloading: {}".format(filepath))
