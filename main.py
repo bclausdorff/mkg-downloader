@@ -11,9 +11,8 @@ parser.add_argument("-f", "--file", dest="filepath", required=True,
                     type=lambda x: file_validator.is_valid_file(parser, x))
 parser.add_argument("-fc", "--filter_classification_term", dest="classification", required=False,
                     help="pass a classification term to filter by (e.g. 'Fotografie')")
-
-
-# parser.add_argument("-v", "--verbosity", help="increase output verbosity", action="store_true")
+parser.add_argument("-v", "--verbosity", dest="verbose",
+                    help="increase output verbosity", action="store_true")
 
 args = parser.parse_args()
 
@@ -42,6 +41,10 @@ def has_term(elem, term):
 
 
 # todo: fuzzy filter
+
+if args.verbose:
+    print("Filtering items for term: {}".format(args.classification))
+
 for event, elem in ET.iterparse(args.filepath):
     if event == 'end' and elem.tag == '{}lido'.format(namespace_prefix):
 
@@ -49,8 +52,9 @@ for event, elem in ET.iterparse(args.filepath):
             continue
 
         record_id    = elem.find('.//lido:recordID', namespaces).text
+        inventory_no = elem.find('.//lido:workID', namespaces).text
         title        = elem.find('.//lido:titleSet/lido:appellationValue', namespaces).text
-        item         = Item(record_id, title)
+        item         = Item(record_id, inventory_no, title)
 
         if elem.find('.//lido:displayDate', namespaces) is not None:
             item.display_date = elem.find('.//lido:displayDate', namespaces).text
@@ -59,9 +63,9 @@ for event, elem in ET.iterparse(args.filepath):
         elem.clear()
 
 
-# for i in item_list:
-#     filename = i.inventory_no + '.jpg'
-#     urllib.request.urlretrieve(i.uri, filename)
+for i in item_list:
+    filename = i.inventory_no + '.jpg'
+    urllib.request.urlretrieve(i.uri, filename)
 
-print(item_list[0].uri)
-urllib.request.urlretrieve(item_list[0].uri, "yolo.jpg")
+    if args.verbose:
+        print("Downloading: {}".format(filename))
