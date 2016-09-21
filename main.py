@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 import urllib.request
 import file_validator
 from item import Item
+from const import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", dest="filepath", required=True,
@@ -18,10 +19,6 @@ parser.add_argument("-v", "--verbosity", dest="verbose",
                     help="increase output verbosity", action="store_true")
 
 args = parser.parse_args()
-
-schema_uri       = 'http://www.lido-schema.org'
-namespace_prefix = '{' + schema_uri + '}'
-namespaces       = {'lido': schema_uri}
 
 item_list = []
 
