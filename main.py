@@ -5,6 +5,7 @@ import urllib.request
 import validator
 from item import Item
 from const import *
+import filter
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", dest="filepath", required=True,
@@ -15,6 +16,9 @@ parser.add_argument("-o", "--output_dir", dest="outputdir", required=False,
                     type=lambda x: validator.is_valid_dir(parser, x))
 parser.add_argument("-fc", "--filter_classification_term", dest="classification", required=False,
                     help="pass a classification term to filter by (e.g. 'Fotografie')")
+parser.add_argument("-fl", "--filter_license", dest="license", required=False,
+                    help="pass a license type to filter by (CC-0, CC-BY, Copyright)",
+                    type=lambda x: validator.is_valid_license(parser, x))
 parser.add_argument("-v", "--verbosity", dest="verbose",
                     help="increase output verbosity", action="store_true")
 
@@ -25,17 +29,6 @@ item_list = []
 if args.verbose:
     print("Downloading all items that have classification term {} to folder {}".format(args.classification, args.outputdir))
 
-def has_term(elem, term):
-    term_elements = elem.findall('.//lido:classificationWrap//lido:term', namespaces)
-    term_texts    = map(lambda x: x.text, term_elements)
-
-    if term is None:
-        return True
-
-    if term in term_texts:
-        return True
-
-    return False
 
 if args.verbose:
     print("Filtering items for term: {}".format(args.classification))
@@ -45,7 +38,10 @@ if args.verbose:
 for event, elem in ET.iterparse(args.filepath):
     if event == 'end' and elem.tag == '{}lido'.format(namespace_prefix):
 
-        if has_term(elem, args.classification) == False:
+        if filter.has_term(elem, args.classification) == False:
+            continue
+
+        if filter.has_license(elem, args.license) == False:
             continue
 
         record_id    = elem.find('.//lido:recordID', namespaces).text
