@@ -2,17 +2,17 @@
 import argparse
 import xml.etree.ElementTree as ET
 import urllib.request
-import file_validator
+import validator
 from item import Item
 from const import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", dest="filepath", required=True,
                     help="path to xml file", metavar="FILE",
-                    type=lambda x: file_validator.is_valid_file(parser, x))
+                    type=lambda x: validator.is_valid_file(parser, x))
 parser.add_argument("-o", "--output_dir", dest="outputdir", required=False,
                     help="folder path for saving the images", default='.',
-                    type=lambda x: file_validator.is_valid_dir(parser, x))
+                    type=lambda x: validator.is_valid_dir(parser, x))
 parser.add_argument("-fc", "--filter_classification_term", dest="classification", required=False,
                     help="pass a classification term to filter by (e.g. 'Fotografie')")
 parser.add_argument("-v", "--verbosity", dest="verbose",
