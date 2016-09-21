@@ -27,11 +27,10 @@ args = parser.parse_args()
 item_list = []
 
 if args.verbose:
-    print("Downloading all items that have classification term {} to folder {}".format(args.classification, args.outputdir))
-
-
-if args.verbose:
-    print("Filtering items for term: {}".format(args.classification))
+    print("Downloading items")
+    print("classification filter: %s" % args.classification)
+    print("license filter: %s" % args.license)
+    print("output dir: %s" % args.outputdir)
 
 # iterating elements and clearing them after usage
 # -> allows to start handling elements right away and have low memory impact
@@ -61,4 +60,4 @@ for i in item_list:
     urllib.request.urlretrieve(i.uri, filepath)
 
     if args.verbose:
-        print("Downloading: {}".format(filepath))
+        print("Downloading: %s" % filepath)
