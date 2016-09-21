@@ -1,5 +1,4 @@
-baseurl = "https://sammlungonline.mkg-hamburg.de/resource-cache/mkg/1/"
-
+#baseurl = "https://sammlungonline.mkg-hamburg.de/resource-cache/mkg/1/"
 baseurl = "https://sammlungonline.mkg-hamburg.de/de/object/{}/image_download/0"
 
 class Item:
