@@ -17,6 +17,9 @@ class EventType(Enum):
     Vollendung       = "Vollendung"
     Veröffentlichung = "Veröffentlichung"
 
+    def toJSON(self):
+        return self.value
+
 class EventDate:
     display_date  = ""
     earliest_date = ""
@@ -42,3 +45,6 @@ class EventDate:
 
     def __str__(self):
         return "EventDate for %s: display is %s, earliest is %s, latest is %s" % (self.eventType.value, self.display_date, self.earliest_date, self.latest_date)
+
+    def toJSON(self):
+        return dict(display_date=self.display_date, earliest_date=self.earliest_date, latest_date=self.latest_date, eventType=self.eventType)

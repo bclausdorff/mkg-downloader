@@ -20,3 +20,6 @@ class Item:
         self.title        = title
         self.description  = description
         self.date         = date
+
+    def toJSON(self):
+        return dict(record_id=self.record_id, inventory_no=self.inventory_no, title=self.title, description=self.description, date=self.date)
