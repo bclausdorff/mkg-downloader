@@ -6,6 +6,7 @@ import validator
 from item import Item
 from const import *
 import filter
+from mkg_lido import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", dest="filepath", required=True,
@@ -32,12 +33,6 @@ if args.verbose:
     print("license filter: %s" % args.license)
     print("output dir: %s" % args.outputdir)
 
-def unwrap_element(elem):
-    if elem is not None:
-        return elem.text
-    else:
-        return ""
-
 # iterating elements and clearing them after usage
 # -> allows to start handling elements right away and have low memory impact
 for event, elem in ET.iterparse(args.filepath):
@@ -52,9 +47,9 @@ for event, elem in ET.iterparse(args.filepath):
         record_id    = elem.find('.//lido:recordID', namespaces).text
         inventory_no = elem.find('.//lido:workID', namespaces).text
         title        = elem.find('.//lido:titleSet/lido:appellationValue', namespaces).text
-        description  = unwrap_element(elem.find('.//lido:objectDescriptionWrap//lido:descriptiveNoteValue', namespaces))
-        display_date = unwrap_element(elem.find('.//lido:displayDate', namespaces))
-        item         = Item(record_id, inventory_no, title, description, display_date)
+        description  = filter.unwrap_element(elem.find('.//lido:objectDescriptionWrap//lido:descriptiveNoteValue', namespaces))
+        date         = EventDate.fromEventWrap(elem, EventType.Herstellung)
+        item         = Item(record_id, inventory_no, title, description, date)
 
         item_list.append(item)
         elem.clear()

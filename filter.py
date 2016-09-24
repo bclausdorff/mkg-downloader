@@ -1,5 +1,11 @@
 from const import *
 
+def unwrap_element(elem):
+    if elem is not None:
+        return elem.text
+    else:
+        return ""
+
 def has_term(elem, term):
     term_elements = elem.findall('.//lido:classificationWrap//lido:term', namespaces)
     term_texts    = map(lambda x: x.text, term_elements)
