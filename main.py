@@ -3,9 +3,12 @@ import argparse
 import xml.etree.ElementTree as ET
 import urllib.request
 import validator
+import json
+from ComplexEncoder import *
 from item import Item
 from const import *
 import filter
+from mkg_lido import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", "--file", dest="filepath", required=True,
@@ -46,18 +49,22 @@ for event, elem in ET.iterparse(args.filepath):
         record_id    = elem.find('.//lido:recordID', namespaces).text
         inventory_no = elem.find('.//lido:workID', namespaces).text
         title        = elem.find('.//lido:titleSet/lido:appellationValue', namespaces).text
-        item         = Item(record_id, inventory_no, title)
+        description  = filter.unwrap_element(elem.find('.//lido:objectDescriptionWrap//lido:descriptiveNoteValue', namespaces))
+        date         = EventDate.fromEventWrap(elem, EventType.Herstellung)
 
-        if elem.find('.//lido:displayDate', namespaces) is not None:
-            item.display_date = elem.find('.//lido:displayDate', namespaces).text
+        item         = Item(record_id, inventory_no, title, description, date)
 
         item_list.append(item)
         elem.clear()
 
+if __name__ == "__main__":
+    json_filepath = args.outputdir + 'metadata.json'
+    with open(json_filepath, 'w') as outfile:
+        json.dump(item_list, outfile, cls=ComplexEncoder)
 
-for i in item_list:
-    filepath = args.outputdir + i.inventory_no + '.jpg'
-    urllib.request.urlretrieve(i.uri, filepath)
+    for i in item_list:
+        filepath = args.outputdir + i.inventory_no + '.jpg'
+        urllib.request.urlretrieve(i.uri, filepath)
 
-    if args.verbose:
-        print("Downloading: %s" % filepath)
+        if args.verbose:
+            print("Downloading: %s" % filepath)

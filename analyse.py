@@ -18,7 +18,21 @@ def get_all_licenses():
             licenses.add(l)
     return licenses
 
-for l in get_all_licenses():
-    print(l)
+def get_all_datetypes():
+    datetypes = set()
+    for event, elem in ET.iterparse(args.filepath):
+        if event == 'end' and elem.tag == '{}eventWrap'.format(namespace_prefix):
+            terms = elem.findall('.//lido:eventSet//lido:eventType//lido:term', namespaces)
+            for t in terms:
+                datetypes.add(t.text)
 
+    return datetypes
+
+
+if __name__ == "__main__":
+    # for l in get_all_licenses():
+    #     print(l)
+
+    for dt in get_all_datetypes():
+        print(dt)
 
